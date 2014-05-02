@@ -13,8 +13,7 @@
                   ssl,
                   xmerl,
                   ibrowse,
-                  inets,
-                  erlcloud]},
+                  inets]},
   {modules, []},
   {env, []}
  ]

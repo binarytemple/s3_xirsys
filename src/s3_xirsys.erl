@@ -14,7 +14,7 @@
 
 -type s3_bucket_acl() :: private
                        | public_read
-                       | public_read_write
+                       | public_read_write.
 
 -spec create_user(string(), string()) -> ok.
 
@@ -25,24 +25,15 @@ create_user(Email, UserName) ->
 
 create_user(Email, UserName, Config)
   when is_record(Config, aws_config) ->
-    create_user(Email, UserName, private, Config);
-
-create_user(Email, UserName, ACL) ->
-    create_user(Email, UserName, ACL, none).
+    create_user(Email, UserName, private, Config).
 
 -spec create_user(string(), string(), s3_bucket_acl(), aws_config()) -> ok.
 
-create_user(Email, UserName, ACL, Config)
-  when is_record(Config, aws_config) ->
-    create_user(Email, UserName, ACL, none, Config).
-
--spec create_user(string(), string(), s3_bucket_acl(), aws_config()) -> ok.
-
-create_user(Email, UserName, ACL, Config)
-  when is_list(Email, UserName), is_atom(ACL), is_atom(LocationConstraint) ->
+create_user(Email, UserName, ACL, Config) ->
     Headers = case ACL of
                   private -> [];  %% private is the default
                   _       -> [{"x-amz-acl", erlcloud:encode_acl(ACL)}]
               end,
-    POSTData = list_to_binary(io_lib:format("{'email': '~s', 'name': '~s'}", [Email, UserName])),
-    erlcloud:s3_simple_request(Config, put, "user", "/", "", [], POSTData, Headers).
+    Data = list_to_binary(io_lib:format("{\"email\": \"~s\", \"name\": \"~s\"}", [Email, UserName])),
+    POSTData = {Data, "application/json"},
+    erlcloud_s3:s3_request(Config, post, "", "/riak-cs/user", "", [], POSTData, Headers).
