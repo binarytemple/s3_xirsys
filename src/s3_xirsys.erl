@@ -6,8 +6,8 @@
 -export([
   init/2,
   init/4,
-  init/5,
-  init/7,
+%  init/5,
+%  init/7,
 	create_user/2,
 	create_user/3,
 	create_user/4
@@ -27,16 +27,17 @@
 
 
 init(Id, Key) ->
-  init(Id, Key, ?DEFAULT_HOST, ?DEFAULT_PORT, "http", ?DEFAULT_PROXY_HOST, ?DEFAULT_PROXY_PORT).
+  init(Id, Key, ?DEFAULT_HOST, ?DEFAULT_PORT). %, "http", ?DEFAULT_PROXY_HOST, ?DEFAULT_PROXY_PORT).
 
 init(Id, Key, Host, Port) ->
-  init(Id, Key, Host, Port, "http", ?DEFAULT_PROXY_HOST, ?DEFAULT_PROXY_PORT).
+  erlcloud_s3:new(Id, Key, Host, Port).
+%  init(Id, Key, Host, Port, "http", ?DEFAULT_PROXY_HOST, ?DEFAULT_PROXY_PORT).
 
-init(Id, Key, Host, Port, Protocol) ->
-  init(Id, Key, Host, Port, Protocol, ?DEFAULT_PROXY_HOST, ?DEFAULT_PROXY_PORT).
+%init(Id, Key, Host, Port, Protocol) ->
+%  init(Id, Key, Host, Port, Protocol, ?DEFAULT_PROXY_HOST, ?DEFAULT_PROXY_PORT).
 
-init(Id, Key, Host, Port, Protocol, Proxy_Host, Proxy_Port) ->
-  erlcloud_s3:new(Id, Key, Host, Port, Protocol, Proxy_Host, Proxy_Port, []).
+%init(Id, Key, Host, Port, Protocol, Proxy_Host, Proxy_Port) ->
+%  erlcloud_s3:new(Id, Key, Host, Port, Protocol, Proxy_Host, Proxy_Port, []).
 
 -type s3_bucket_acl() :: private
                        | public_read
